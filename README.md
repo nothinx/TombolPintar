@@ -81,6 +81,28 @@ void loop() {
 
 Panggil `perbarui()` di setiap `loop()` sebelum memeriksa event. Hindari `delay()` panjang di `loop()`, karena tombol hanya dibaca saat `perbarui()` dipanggil.
 
+## Hasil simulasi
+
+![Diagram waktu satu klik: pin mentah bergetar saat ditekan, ditekan() muncul di tepi pertama, diklik() 300 ms setelah dilepas](extras/gambar/tombol_klik.svg)
+
+Kontak tombol tiruan bergetar beberapa milidetik setiap ditekan dan dilepas. `ditekan()` muncul tepat di sentuhan pertama, getaran berikutnya diabaikan, dan `diklik()` baru muncul 300 ms setelah dilepas karena library menunggu kemungkinan klik kedua.
+
+![Diagram waktu klik ganda: dua tekanan menghasilkan satu diklikGanda() 300 ms setelah lepas kedua, tanpa diklik()](extras/gambar/tombol_klik_ganda.svg)
+
+Dua klik beruntun dilaporkan sekali sebagai `diklikGanda()`, tanpa `diklik()` tambahan dan tanpa klik palsu dari getaran kontak.
+
+![Diagram waktu tombol ditahan 2 detik: ditekanLama() setelah 1000 ms, berulang() tiap 200 ms, dilepas tanpa klik](extras/gambar/tombol_tahan.svg)
+
+Saat ditahan, `ditekanLama()` muncul sekali di 1 detik, `berulang()` terus berdetak tiap 200 ms, dan melepas tombol setelahnya tidak dihitung sebagai klik.
+
+Semua grafik adalah **simulasi**: tombol dan getaran kontaknya tiruan, `loop()` memanggil `perbarui()` tiap 0,1 ms, dan pengaturan memakai nilai default. Bukan pengukuran hardware.
+
+Grafik dibuat dari simulasi di PC yang menjalankan kode library ini (`extras/simulasi`):
+```sh
+cd extras/simulasi
+python gambar.py   # butuh g++ dan matplotlib
+```
+
 ## `ditekan()` atau `diklik()`?
 
 Tombol yang bisa diklik dua kali harus menunggu sebentar (jeda klik, default 300 ms) untuk memastikan klik kedua tidak datang. Karena itu:

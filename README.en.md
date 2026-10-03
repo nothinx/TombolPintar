@@ -39,6 +39,26 @@ void loop() {
 - A button held during `mulai()` is reported by `sedangDitekan()` without firing false events.
 - Safe across the `millis()` overflow.
 
+## Simulation results
+
+![Timing diagram of a single click: the raw pin bounces on press, ditekan() fires on the first edge, diklik() 300 ms after release](extras/gambar/tombol_klik.svg)
+
+`ditekan()` (pressed) fires on the very first contact edge and the bounce is ignored; `diklik()` (clicked) fires 300 ms after release, once no second click arrives.
+
+![Timing diagram of a double click: one diklikGanda() 300 ms after the second release, no diklik()](extras/gambar/tombol_klik_ganda.svg)
+
+Two quick clicks are reported once as `diklikGanda()` (double click), with no extra `diklik()`.
+
+![Timing diagram of a 2-second hold: ditekanLama() after 1000 ms, berulang() every 200 ms, release is not a click](extras/gambar/tombol_tahan.svg)
+
+Holding fires `ditekanLama()` (long press) once at 1 s and `berulang()` (repeat) every 200 ms; releasing afterwards is not a click.
+
+These are **simulations** with a simulated bouncing button and default settings, not hardware measurements. To regenerate:
+```sh
+cd extras/simulasi
+python gambar.py   # needs g++ and matplotlib
+```
+
 ## Function reference
 
 | Indonesian | English | Notes |
