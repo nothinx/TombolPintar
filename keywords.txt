@@ -1,0 +1,26 @@
+#######################################
+# TombolPintar
+#######################################
+
+TombolPintar	KEYWORD1
+
+mulai	KEYWORD2
+perbarui	KEYWORD2
+ditekan	KEYWORD2
+dilepas	KEYWORD2
+diklik	KEYWORD2
+diklikGanda	KEYWORD2
+jumlahKlik	KEYWORD2
+ditekanLama	KEYWORD2
+berulang	KEYWORD2
+sedangDitekan	KEYWORD2
+durasiTekan	KEYWORD2
+aturDebounce	KEYWORD2
+aturJedaKlik	KEYWORD2
+aturTekanLama	KEYWORD2
+aturUlang	KEYWORD2
+
+PULLUP_INTERNAL	LITERAL1
+PULLDOWN_INTERNAL	LITERAL1
+AKTIF_LOW	LITERAL1
+AKTIF_HIGH	LITERAL1
