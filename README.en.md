@@ -59,6 +59,23 @@ cd extras/simulasi
 python gambar.py   # needs g++ and matplotlib
 ```
 
+## Speed & memory
+
+Measured with simavr (cycle-accurate ATmega328P simulator), Arduino Uno 16 MHz, same sketch for every library (click, double click, long press enabled where supported). Cycles per update call, including `digitalRead()` (~73 cycles).
+
+| Library | RAM per object | Idle | Held | Click gap | Long-press repeat | Sketch flash |
+|---|---|---|---|---|---|---|
+| **TombolPintar 1.0.0** | **16 B** | 197 (12 µs) | 203 | 208 | 800 (50 µs) | 5,292 B |
+| OneButton 2.6.2 | 83 B | 266 (17 µs) | 269 | 281 | 319 | 6,046 B |
+| Button2 2.7.0 | 59 B | 175 (11 µs) | 232 | 170 | 167 | 5,606 B |
+| EasyButton 2.0.3 | 113 B | 328 (21 µs) | 393 | 328 | 426 | 5,896 B |
+| AceButton 1.10.1 | 17 B + shared config | 233 (15 µs) | 271 | 252 | 255 | 5,712 B |
+| JC_Button 2.1.6 | 24 B | 175 (11 µs) | 201 | 175 | 201 | 5,174 B |
+| Bounce2 2.71 | 19 B | 174 (11 µs) | 174 | 174 | 174 | 5,004 B |
+| ezButton 1.0.6 | 26 B | 184 (12 µs) | 173 | 184 | 173 | 5,000 B |
+
+`perbarui()` is O(1). JC_Button, Bounce2 and ezButton are ~20 cycles faster because they have no double click or repeat. While a button is held past the long-press time, one 32-bit division (~600 cycles) computes `berulang()`; avoiding it would cost RAM per button, so it is left as is. Benchmark sketch: `extras/benchmark/TombolPintarBenchmark`.
+
 ## Function reference
 
 | Indonesian | English | Notes |

@@ -103,6 +103,29 @@ cd extras/simulasi
 python gambar.py   # butuh g++ dan matplotlib
 ```
 
+## Kecepatan & memori
+
+Diukur dengan simavr (simulator ATmega328P yang akurat per siklus) di Arduino Uno 16 MHz, sketch yang sama untuk semua library: klik, klik ganda, dan tekan lama aktif (sejauh library mendukung), satu tombol di pin 2. Angka = siklus per panggilan fungsi update library (`perbarui()`, `tick()`, `loop()`, `read()`, ...), termasuk `digitalRead()` (±73 siklus).
+
+| Library | RAM per objek | Diam | Ditahan | Jeda klik | Tekan lama berulang | Flash sketch |
+|---|---|---|---|---|---|---|
+| **TombolPintar 1.0.0** | **16 B** | 197 (12 µs) | 203 (13 µs) | 208 (13 µs) | 800 (50 µs) | 5.292 B |
+| OneButton 2.6.2 | 83 B | 266 (17 µs) | 269 | 281 | 319 | 6.046 B |
+| Button2 2.7.0 | 59 B | 175 (11 µs) | 232 | 170 | 167 | 5.606 B |
+| EasyButton 2.0.3 | 113 B | 328 (21 µs) | 393 | 328 | 426 | 5.896 B |
+| AceButton 1.10.1 | 17 B + config bersama | 233 (15 µs) | 271 | 252 | 255 | 5.712 B |
+| JC_Button 2.1.6 | 24 B | 175 (11 µs) | 201 | 175 | 201 | 5.174 B |
+| Bounce2 2.71 | 19 B | 174 (11 µs) | 174 | 174 | 174 | 5.004 B |
+| ezButton 1.0.6 | 26 B | 184 (12 µs) | 173 | 184 | 173 | 5.000 B |
+
+`perbarui()` O(1) waktu dan memori. Lewat `perbarui(bool)` (tanpa `digitalRead()`) jalur diam hanya 126 siklus.
+
+Jujur soal kekalahan:
+- JC_Button, Bounce2, dan ezButton ±20 siklus (±1,5 µs) lebih cepat dan sedikit lebih kecil di flash, karena tidak menghitung klik ganda atau tekan lama berulang.
+- Selama tombol ditahan melewati batas tekan lama, `perbarui()` memakai satu pembagian 32 bit (±600 siklus) untuk menghitung `berulang()`. Menghindarinya butuh RAM tambahan per tombol, sedangkan jalur ini hanya aktif saat tombol ditahan >1 detik, jadi sengaja dibiarkan. 50 µs per `loop()` tetap jauh di bawah waktu debounce.
+
+Mengulang pengukuran: sketch `extras/benchmark/TombolPintarBenchmark` (butuh simavr). Versi pesaing di atas diunduh dari rilis resminya.
+
 ## `ditekan()` atau `diklik()`?
 
 Tombol yang bisa diklik dua kali harus menunggu sebentar (jeda klik, default 300 ms) untuk memastikan klik kedua tidak datang. Karena itu:
